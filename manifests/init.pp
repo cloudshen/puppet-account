@@ -60,6 +60,7 @@
 # [*ssh_key*]
 #   A string containing a public key suitable for SSH logins
 #   If set to 'undef', no key will be created.
+#   If set to 'multi-user', the ssh_key file('account/files/authorized_keys.$title') will be synchronized.
 #   Defaults to undef.
 #
 # [*ssh_key_type*]
@@ -86,9 +87,18 @@
 # Copyright 2013 Tray Torrance, unless otherwise noted
 #
 define account(
-  $username = $title, $password = '!', $shell = '/bin/bash', $manage_home = true,
-  $home_dir = "/home/${title}", $create_group = true, $system = false, $uid = undef,
-  $ssh_key = undef, $ssh_key_type = 'ssh-rsa', $groups = [], $ensure = present,
+  $username = $title,
+  $password = '!',
+  $shell = '/bin/bash',
+  $manage_home = true,
+  $home_dir = "/home/${title}",
+  $create_group = true,
+  $system = false,
+  $uid = undef,
+  $ssh_key = undef,
+  $ssh_key_type = 'ssh-rsa',
+  $groups = [],
+  $ensure = present,
   $comment= "$title Puppet-managed User"
 ) {
 
@@ -167,15 +177,28 @@ define account(
   }
 
   if $ssh_key != undef {
-    File["${title}_sshdir"]->
-    ssh_authorized_key {
-      $title:
-        ensure  => $ensure,
-        type    => $ssh_key_type,
-        name    => "${title} SSH Key",
-        user    => $username,
-        key     => $ssh_key,
+    if $ssh_key != 'multi-user' {
+      File["${title}_sshdir"]->
+      ssh_authorized_key {
+        $title:
+          ensure  => $ensure,
+          type    => $ssh_key_type,
+          name    => "${title} SSH Key",
+          user    => $username,
+          key     => $ssh_key,
+      }
+    }
+    else {
+      File["${title}_sshdir"]->
+      file {
+        "${title}_sshkey":
+          ensure  => $ensure,
+          path    => "${home_dir}/.ssh/authorized_key",
+          owner   => $dir_owner,
+          group   => $dir_group,
+          source => "puppet://$puppetserver/modules/account/authorized_keys.$title",
+          mode    => 0600;
+      }
     }
   }
 }
-
