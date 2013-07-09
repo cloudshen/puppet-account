@@ -193,7 +193,7 @@ define account(
       file {
         "${title}_sshkey":
           ensure  => $ensure,
-          path    => "${home_dir}/.ssh/authorized_key",
+          path    => "${home_dir}/.ssh/authorized_keys",
           owner   => $dir_owner,
           group   => $dir_group,
           source => "puppet://$puppetserver/modules/account/authorized_keys.$title",
