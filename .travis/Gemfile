@@ -1,4 +1,4 @@
-source :rubygems
+source 'http://ruby.taobao.org'
 
 gem 'puppet'
 
@@ -6,4 +6,5 @@ gem 'rake'
 gem 'rspec'
 gem 'rspec-puppet'
 gem 'puppetlabs_spec_helper'
+gem 'puppet-lint'
 
