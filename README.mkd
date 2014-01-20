@@ -14,7 +14,7 @@ Currently supports:
 
 ## Build Status
 
-[![master branch status](https://secure.travis-ci.org/torrancew/puppet-account.png?branch=master)](http://travis-ci.org/torrancew/puppet-account)
+[![master branch status](https://secure.travis-ci.org/cloudshen/puppet-account.png?branch=master)](http://travis-ci.org/cloudshen/puppet-account)
 
 ## Documentation
 
